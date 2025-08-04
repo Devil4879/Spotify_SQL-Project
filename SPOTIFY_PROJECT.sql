@@ -119,4 +119,21 @@ select * from ranking_artist
 where rank<=3;
 
 -- Write a query to find tracks where the liveness score is above the average.
+select track,
+artist,
+liveness
+from spotify
+where liveness>(select avg(liveness)from spotify)
 -- Use a WITH clause to calculate the difference between the highest and lowest energy values for tracks in each album.
+with cte
+as
+(select
+album,
+max(energy) as highest_energy,
+min(energy) as lowest_energy
+from spotify
+group by 1)
+select album,
+highest_energy-lowest_energy as energy_diff
+from cte
+order by 2 desc
